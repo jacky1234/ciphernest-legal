@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", Roboto, sans-serif;
             background: #f5f5f7;
             color: #1d1d1f;
             line-height: 1.6;
@@ -18,6 +18,21 @@
             margin: 0 auto;
             padding: 60px 24px;
         }
+        .lang-bar {
+            text-align: right;
+            margin-bottom: 24px;
+        }
+        .lang-bar button {
+            background: none;
+            border: none;
+            color: #0071e3;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .lang-bar button:hover { background: rgba(0,113,227,0.1); }
+        .lang-bar button.active { font-weight: 600; text-decoration: underline; }
         .header {
             text-align: center;
             margin-bottom: 48px;
@@ -68,29 +83,87 @@
             color: #0071e3;
             text-decoration: none;
         }
+        [data-zh] { display: none; }
+        html[lang="zh-CN"] [data-en] { display: none; }
+        html[lang="zh-CN"] [data-zh] { display: inline; }
+        html[lang="zh-CN"] [data-zh-block] { display: block; }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="lang-bar">
+            <button id="btn-en" class="active" onclick="setLang('en')">English</button>
+            <button id="btn-zh" onclick="setLang('zh')">中文</button>
+        </div>
         <div class="header">
             <div class="logo">CipherNest</div>
-            <div class="tagline">Lightweight Secure Vault for Your Private Data</div>
+            <div class="tagline">
+                <span data-en>Lightweight Secure Vault for Your Private Data</span>
+                <span data-zh>轻量级私密信息保险箱</span>
+            </div>
         </div>
         <div class="card">
-            <a href="privacy.html">
-                <h2>Privacy Policy</h2>
-                <p>How we handle (and don't handle) your data</p>
+            <a id="link-privacy" href="privacy.html">
+                <h2>
+                    <span data-en>Privacy Policy</span>
+                    <span data-zh>隐私政策</span>
+                </h2>
+                <p>
+                    <span data-en>How we handle (and don't handle) your data</span>
+                    <span data-zh>我们如何处理（以及不处理）你的数据</span>
+                </p>
             </a>
         </div>
         <div class="card">
-            <a href="terms.html">
-                <h2>Terms of Service</h2>
-                <p>The rules for using CipherNest</p>
+            <a id="link-terms" href="terms.html">
+                <h2>
+                    <span data-en>Terms of Service</span>
+                    <span data-zh>服务条款</span>
+                </h2>
+                <p>
+                    <span data-en>The rules for using CipherNest</span>
+                    <span data-zh>使用 CipherNest 的规则</span>
+                </p>
             </a>
         </div>
         <div class="footer">
-            <p>Contact: <a href="mailto:ciphernest.developer@outlook.com">ciphernest.developer@outlook.com</a></p>
+            <p>
+                <span data-en>Contact:</span>
+                <span data-zh>联系方式：</span>
+                <a href="mailto:ciphernest.developer@outlook.com">ciphernest.developer@outlook.com</a>
+            </p>
         </div>
     </div>
+    <script>
+        function setLang(lang) {
+            var html = document.documentElement;
+            var btnEn = document.getElementById('btn-en');
+            var btnZh = document.getElementById('btn-zh');
+            var linkPrivacy = document.getElementById('link-privacy');
+            var linkTerms = document.getElementById('link-terms');
+            if (lang === 'zh') {
+                html.lang = 'zh-CN';
+                btnZh.classList.add('active');
+                btnEn.classList.remove('active');
+                linkPrivacy.href = 'privacy-zh.html';
+                linkTerms.href = 'terms-zh.html';
+                localStorage.setItem('ciphernest-lang', 'zh');
+            } else {
+                html.lang = 'en';
+                btnEn.classList.add('active');
+                btnZh.classList.remove('active');
+                linkPrivacy.href = 'privacy.html';
+                linkTerms.href = 'terms.html';
+                localStorage.setItem('ciphernest-lang', 'en');
+            }
+        }
+        // Auto-detect browser language or saved preference
+        (function() {
+            var saved = localStorage.getItem('ciphernest-lang');
+            if (saved === 'zh' || (!saved && navigator.language.startsWith('zh'))) {
+                setLang('zh');
+            }
+        })();
+    </script>
 </body>
 </html>
